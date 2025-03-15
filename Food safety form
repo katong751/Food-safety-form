@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Safety Questionnaire</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Food Handling and Safety Research Questionnaire</h2>
+        <form id="questionnaireForm">
+            <label>Age Group:</label>
+            <select id="ageGroup">
+                <option value="">Select</option>
+                <option value="18-25">18-25</option>
+                <option value="26-35">26-35</option>
+                <option value="36-45">36-45</option>
+                <option value="46-55">46-55</option>
+                <option value="56+">56+</option>
+            </select>
+
+            <label>Gender:</label>
+            <select id="gender">
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label>Do you have formal training in food safety?</label>
+            <select id="training">
+                <option value="">Select</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+
+            <label>Which temperature range is considered the "Danger Zone" for bacteria?</label>
+            <select id="dangerZone">
+                <option value="">Select</option>
+                <option value="0-5">0°C - 5°C</option>
+                <option value="5-60">5°C - 60°C</option>
+                <option value="60-100">60°C - 100°C</option>
+            </select>
+
+            <label>How do you store raw meat in the fridge?</label>
+            <select id="meatStorage">
+                <option value="">Select</option>
+                <option value="top">Top Shelf</option>
+                <option value="middle">Middle Shelf</option>
+                <option value="bottom">Bottom Shelf</option>
+            </select>
+
+            <label>Additional Comments:</label>
+            <textarea id="comments" rows="4"></textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+        <p id="responseMessage"></p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>       body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+h2 {
+    text-align: center;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+}
+
+select, textarea, button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+button {
+    background-color: green;
+    color: white;
+    border: none;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: darkgreen;
+}
+
+#responseMessage {
+    margin-top: 10px;
+    font-weight: bold;
+    color: green;
+}
+document.getElementById("questionnaireForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    let ageGroup = document.getElementById("ageGroup").value;
+    let gender = document.getElementById("gender").value;
+    let training = document.getElementById("training").value;
+    let dangerZone = document.getElementById("dangerZone").value;
+    let meatStorage = document.getElementById("meatStorage").value;
+    let comments = document.getElementById("comments").value;
+
+    if (!ageGroup || !gender || !training || !dangerZone || !meatStorage) {
+        alert("Please complete all required fields.");
+        return;
+    }
+
+    // Send data to Google Sheets
+    const data = {
+        ageGroup,
+        gender,
+        training,
+        dangerZone,
+        meatStorage,
+        comments
+    };
+
+    fetch("YOUR_GOOGLE_SHEETS_API_URL", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => {
+        document.getElementById("responseMessage").innerText = "Thank you for your submission!";
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("There was an error submitting the form.");
+    });
+});
